@@ -26,6 +26,7 @@ programme financier**, avec **rendu bilingue Français / Anglais** et **export P
 | Informations du Dossier | Nom, adresse, **montant sollicité**, **mensualité**, devise — *File information* |
 | Statut | **Historique chronologique numéroté** — ajoutez une case **à chaque fois que la procédure suit son cours** ; les étapes sont reclassées automatiquement par date (de la plus ancienne à la plus récente), la dernière en date est surlignée — *Status: numbered chronological history, latest step highlighted* |
 | Forfait Assurance | Montant (par défaut **1 115 EUR**) et statut de règlement — *Insurance fee, default "not yet paid"* |
+| Statuts Paiements effectués ou en cours | **Historique chronologique des frais à payer** : montant, devise, statut (réglé / en cours / pas encore réglé), **notice Urgente ⚠** et totaux réglé / non réglé — *Payment statuses: chronological fee list, urgent notice, totals* |
 | Transmission à la Banque | **Historique chronologique** (N°, date, banque, information transmise) — *Transmission to the bank: chronological history* |
 | Statut de la Transaction | **Historique chronologique** (N°, date, statut, détails) — *Transaction status: chronological history* |
 | Pied de page | Zones de signature entreprise / bénéficiaire — *Signature areas* |
@@ -34,7 +35,7 @@ programme financier**, avec **rendu bilingue Français / Anglais** et **export P
 
 - Le brouillon est **enregistré automatiquement** dans le navigateur (localStorage).
 - Le bouton **« 💾 Enregistrer »** archive le dossier courant ; il peut être rouvert plus tard
-  via la section **« Dossiers Enregistrés / Saved Files »**.
+  via la section **« Archives Locales / Local Archives »**.
 - Les photos sont lues, **redimensionnées et stockées localement** (aucun envoi réseau).
 - **« ⟲ Réinitialiser »** vide le formulaire ; **« 🧪 Exemple »** charge des données de démonstration.
 

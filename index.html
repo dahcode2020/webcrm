@@ -125,6 +125,14 @@
   .step.latest{background:var(--gold)}
   tr.latest-row td{background:#f2f7ff}
   tr.latest-row td.num{background:#eaf2fd}
+  tr.urgent-row td{background:#fdf1ef}
+  tr.urgent-row td.num{background:#fae7e3}
+  .pay-paid{color:#1e7d32;font-weight:600}
+  .pay-progress{color:#a05a00;font-weight:600}
+  .pay-unpaid{color:#b3372f;font-weight:600}
+  .urgent-badge{display:inline-block;background:var(--danger);color:#fff;font-size:9px;font-weight:700;
+    letter-spacing:.5px;border-radius:3px;padding:1px 5px;margin-left:5px}
+  .pay-sum{margin-top:7px;font-size:11.5px}
   .hist-note{font-size:9.5px;color:var(--mut);margin-top:6px;font-style:italic}
   .sec-title{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
   .sec-note{font-weight:400;font-size:9px;text-transform:none;letter-spacing:.3px;opacity:.85;white-space:nowrap}
@@ -304,9 +312,18 @@
     </div>
 
     <div class="card">
-      <h3>Dossiers Enregistrés <span class="en">/ Saved Files</span></h3>
-      <p class="empty-hint">Enregistrez chaque dossier dans ce navigateur pour le retrouver et le mettre à jour plus tard.<br>
-        <i>Save each file in this browser to find and update it later.</i></p>
+      <h3>Statuts Paiements effectués ou en cours <span class="en">/ Payment Statuses — Paid or In Progress</span></h3>
+      <p class="empty-hint">Cette rubrique liste les frais à payer et confirme s'ils ont été payés ou non, de façon chronologique.
+        La notice « Urgente » signale les frais exigeant un traitement immédiat.<br>
+        <i>This section lists the fees to be paid and confirms whether they have been paid or not, in chronological order.
+        The “Urgent” notice flags fees requiring immediate attention.</i></p>
+      <div id="list-pay"></div>
+      <button type="button" class="add-btn" data-add="pay">＋ Ajouter un frais / Add a fee</button>
+    </div>
+
+    <div class="card">
+      <h3>Archives Locales <span class="en">/ Local Archives</span></h3>
+      <p class="empty-hint">Brouillages enregistrés dans ce navigateur — enregistrez le dossier courant pour le retrouver ici. <i>Drafts saved in this browser.</i></p>
       <div id="filesList"></div>
     </div>
 
@@ -344,7 +361,8 @@ function defaultState(){
     status:[],   /* [{date,label,details}] */
     insurance:{ amount:'1115', currency:'EUR', paid:'unpaid', paidDate:'' },
     bank:[],     /* [{date,bank,info}] */
-    trans:[]     /* [{date,label,details}] */
+    trans:[],    /* [{date,label,details}] */
+    payments:[]  /* [{date,label,amount,currency,status,paidDate,urgent}] */
   };
 }
 var state = defaultState();
@@ -480,6 +498,139 @@ function dynTable(key){
   return t;
 }
 
+/* ---------- Statuts Paiements effectués ou en cours / Payment statuses ---------- */
+var CURRENCIES = ['EUR','USD','GBP','CHF','CAD','XOF','XAF'];
+var PAY_STATUS = [
+  ['unpaid','Pas encore réglé / Not yet paid'],
+  ['progress','En cours / In progress'],
+  ['paid','Réglé / Paid']
+];
+function payStatusInfo(s, paidDate){
+  if(s==='paid'){
+    var t = 'Réglé / Paid';
+    if(paidDate) t += ' — '+fmtDate(paidDate);
+    return '<span class="pay-paid">'+esc(t)+'</span>';
+  }
+  if(s==='progress') return '<span class="pay-progress">En cours / In progress</span>';
+  return '<span class="pay-unpaid">Pas encore réglé / Not yet paid</span>';
+}
+function renderPayments(){
+  state.payments = sortChrono(state.payments||[]);
+  var box = document.getElementById('list-pay');
+  box.innerHTML = '';
+  var arr = state.payments;
+  if(!arr.length){
+    box.innerHTML = '<p class="empty-hint">Aucun frais enregistré. / No fee yet.</p>';
+    return;
+  }
+  arr.forEach(function(p){
+    var card = document.createElement('div'); card.className='entry';
+    var head = document.createElement('div'); head.className='entry-head';
+    head.innerHTML = '<span class="entry-num">'+(state.payments.indexOf(p)+1)+'</span>';
+    var del = document.createElement('button'); del.type='button'; del.className='btn-del';
+    del.title='Supprimer / Delete'; del.textContent='✕';
+    del.addEventListener('click', function(){ state.payments.splice(state.payments.indexOf(p),1); refreshAll(); });
+    head.appendChild(del); card.appendChild(head);
+    function mkField(lab, el){
+      var w = document.createElement('label'); w.className='fld';
+      w.innerHTML = '<span class="lab">'+lab+'</span>';
+      w.appendChild(el); return w;
+    }
+    var dIn=document.createElement('input'); dIn.type='date'; dIn.value=p.date||'';
+    dIn.addEventListener('input', function(){ p.date=dIn.value; schedule(); });
+    var lIn=document.createElement('input'); lIn.type='text'; lIn.value=p.label||'';
+    lIn.placeholder='ex. Frais de dossier / ex. Application fee';
+    lIn.addEventListener('input', function(){ p.label=lIn.value; schedule(); });
+    var aIn=document.createElement('input'); aIn.type='number'; aIn.min='0'; aIn.step='any';
+    aIn.placeholder='ex. 1115'; aIn.value=p.amount||'';
+    aIn.addEventListener('input', function(){ p.amount=aIn.value; schedule(); });
+    var cSel=document.createElement('select');
+    CURRENCIES.forEach(function(c){
+      var o=document.createElement('option'); o.value=c; o.textContent=c;
+      if((p.currency||'EUR')===c) o.selected=true;
+      cSel.appendChild(o);
+    });
+    cSel.addEventListener('change', function(){ p.currency=cSel.value; schedule(); });
+    var sSel=document.createElement('select');
+    PAY_STATUS.forEach(function(st){
+      var o=document.createElement('option'); o.value=st[0]; o.textContent=st[1];
+      if((p.status||'unpaid')===st[0]) o.selected=true;
+      sSel.appendChild(o);
+    });
+    sSel.addEventListener('change', function(){ p.status=sSel.value; schedule(); });
+    var pdIn=document.createElement('input'); pdIn.type='date'; pdIn.value=p.paidDate||'';
+    pdIn.addEventListener('input', function(){ p.paidDate=pdIn.value; schedule(); });
+    var uIn=document.createElement('input'); uIn.type='checkbox'; uIn.checked=!!p.urgent;
+    uIn.addEventListener('change', function(){ p.urgent=uIn.checked; schedule(); });
+
+    var r1=document.createElement('div'); r1.className='row2';
+    r1.appendChild(mkField('Date', dIn)); r1.appendChild(mkField('Frais / Fee', lIn));
+    card.appendChild(r1);
+    var r2=document.createElement('div'); r2.className='row2';
+    r2.appendChild(mkField('Montant / Amount', aIn)); r2.appendChild(mkField('Devise / Currency', cSel));
+    card.appendChild(r2);
+    var r3=document.createElement('div'); r3.className='row2';
+    r3.appendChild(mkField('Statut du paiement / Payment status', sSel));
+    r3.appendChild(mkField('Date de règlement / Payment date', pdIn));
+    card.appendChild(r3);
+    var uLab=document.createElement('label');
+    uLab.style.cssText='display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--danger);margin-top:2px';
+    uLab.appendChild(uIn);
+    var uTxt=document.createElement('span'); uTxt.textContent='⚠ Notice Urgente / Urgent notice';
+    uLab.appendChild(uTxt); card.appendChild(uLab);
+    box.appendChild(card);
+  });
+}
+function paymentsTable(){
+  var arr = sortChrono(state.payments||[]).filter(function(p){
+    return String(p.label||'').trim()!=='' || String(p.amount||'').trim()!=='' || p.date;
+  });
+  var head = '<table class="dyn"><thead><tr>'+
+    '<th style="width:7%">N°</th><th style="width:15%">Date</th>'+
+    '<th style="width:32%">Frais / Fee</th><th style="width:20%">Montant / Amount</th>'+
+    '<th style="width:26%">Statut / Status</th></tr></thead><tbody>';
+  if(!arr.length){
+    return head+'<tr class="none-row"><td colspan="5">Néant pour le moment / None at this time</td></tr></tbody></table>';
+  }
+  var rows = arr.map(function(p, i){
+    var isLast = (i===arr.length-1 && arr.length>1);
+    var cls = p.urgent ? ' class="urgent-row"' : (isLast ? ' class="latest-row"' : '');
+    var amt = fmtAmount(p.amount, p.currency||'EUR', 'fr') || '—';
+    var fee = esc(p.label||'—');
+    if(p.urgent) fee += ' <span class="urgent-badge">⚠ URGENT</span>';
+    return '<tr'+cls+'>'+
+      '<td class="num"><span class="step'+(isLast?' latest':'')+'">'+(i+1)+'</span></td>'+
+      '<td>'+ (esc(fmtDate(p.date))||'—') +'</td>'+
+      '<td>'+fee+'</td>'+
+      '<td>'+esc(amt)+'</td>'+
+      '<td>'+payStatusInfo(p.status, p.paidDate)+'</td></tr>';
+  }).join('');
+  var t = head+rows+'</tbody></table>';
+  /* Totaux par devise / Totals per currency */
+  var unpaidByCur={}, paidByCur={};
+  arr.forEach(function(p){
+    var n = parseFloat(String(p.amount||'').replace(/\s/g,'').replace(',','.'));
+    if(!isFinite(n)) return;
+    var cur = p.currency||'EUR';
+    var tgt = (p.status==='paid') ? paidByCur : unpaidByCur;
+    tgt[cur] = (tgt[cur]||0)+n;
+  });
+  function fmtMap(m){
+    return Object.keys(m).map(function(c){ return fmtAmount(String(m[c]), c, 'fr'); }).join(' &nbsp;·&nbsp; ');
+  }
+  if(Object.keys(unpaidByCur).length){
+    t += '<div class="pay-sum"><strong>Total non réglé / Total outstanding :</strong> <span class="pay-unpaid">'+fmtMap(unpaidByCur)+'</span></div>';
+  } else {
+    t += '<div class="pay-sum"><strong>Tous les frais sont réglés / All fees are paid.</strong> ✔</div>';
+  }
+  if(Object.keys(paidByCur).length){
+    t += '<div class="pay-sum"><strong>Total réglé / Total paid :</strong> <span class="pay-paid">'+fmtMap(paidByCur)+'</span></div>';
+  }
+  t += '<div class="hist-note">Historique chronologique des paiements — la dernière ligne correspond à l&#39;entrée la plus récente. '+
+       '/ Chronological payment history — the last row is the most recent entry.</div>';
+  return t;
+}
+
 function docHTML(){
   var c=state.company, d=state.doc, b=state.beneficiary, f=state.file, ins=state.insurance;
   var now = new Date();
@@ -544,6 +695,10 @@ function docHTML(){
       '<div class="ins-line">'+(insEn? '<strong>'+esc(insEn)+'</strong>' : '<strong>'+esc(ins.currency)+' '+esc(ins.amount||'—')+'</strong>')+' — '+esc(stEn)+'</div>'+
       '<div class="ins-note">Forfait assurance du programme financier / Financial program insurance fee</div>'+
     '</div>'+
+  '</div>'+
+
+  '<div class="sec"><div class="sec-title"><span>Statuts Paiements effectués ou en cours / Payment Statuses — Paid or In Progress</span><span class="sec-note">Historique chronologique / Chronological history</span></div>'+
+    '<div class="sec-body">'+paymentsTable()+'</div>'+
   '</div>'+
 
   '<div class="sec"><div class="sec-title"><span>Transmission à la Banque / Transmission to the Bank</span><span class="sec-note">Historique chronologique / Chronological history</span></div>'+
@@ -638,6 +793,7 @@ function setFormFromState(){
   });
   updateThumbs();
   Object.keys(DYN).forEach(renderRows);
+  renderPayments();
 }
 function refreshAll(){ setFormFromState(); renderDoc(); saveDraft(); }
 
@@ -715,6 +871,14 @@ function sampleState(){
     { date: isoAgo(12), label:'En attente de décaissement / Pending disbursement',
       details:'La banque a confirmé la mise à disposition des fonds sous 15 jours ouvrés.' }
   ];
+  s.payments = [
+    { date: isoAgo(75), label:'Frais de dossier / Application fee', amount:'100', currency:'EUR',
+      status:'paid', paidDate: isoAgo(70), urgent:false },
+    { date: isoAgo(30), label:'Frais de transfection bancaire / Bank transfer fee', amount:'50', currency:'EUR',
+      status:'progress', paidDate:'', urgent:false },
+    { date: isoAgo(5), label:'Forfait assurance / Insurance fee', amount:'1115', currency:'EUR',
+      status:'unpaid', paidDate:'', urgent:true }
+  ];
   return s;
 }
 
@@ -735,7 +899,16 @@ function sampleState(){
   /* boutons « ajouter une case » */
   document.querySelectorAll('[data-add]').forEach(function(btn){
     btn.addEventListener('click', function(){
-      var key = btn.dataset.add, cfg = DYN[key];
+      var key = btn.dataset.add;
+      if(key==='pay'){
+        state.payments.push({ date:'', label:'', amount:'', currency:(state.insurance && state.insurance.currency)||'EUR',
+                              status:'unpaid', paidDate:'', urgent:false });
+        refreshAll();
+        var lastPay = document.querySelector('#list-pay .entry:last-child input[type=text]');
+        if(lastPay) lastPay.focus();
+        return;
+      }
+      var cfg = DYN[key];
       var row = {};
       cfg.fields.forEach(function(f){ row[f[0]]=''; });
       state[cfg.arrKey].push(row);
