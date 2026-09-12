@@ -119,6 +119,15 @@
     letter-spacing:.4px;border:1px solid var(--line);padding:5px 8px;text-align:left}
   table.dyn td{border:1px solid var(--line);padding:6px 8px;font-size:11.5px;vertical-align:top;break-inside:avoid}
   table.dyn tr{break-inside:avoid}
+  table.dyn td.num{text-align:center;background:#f8fafd}
+  .step{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;
+    border-radius:50%;background:var(--navy);color:#fff;font-weight:700;font-size:10.5px;padding:0 4px}
+  .step.latest{background:var(--gold)}
+  tr.latest-row td{background:#f2f7ff}
+  tr.latest-row td.num{background:#eaf2fd}
+  .hist-note{font-size:9.5px;color:var(--mut);margin-top:6px;font-style:italic}
+  .sec-title{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .sec-note{font-weight:400;font-size:9px;text-transform:none;letter-spacing:.3px;opacity:.85;white-space:nowrap}
   .none-row td{color:#9aa7b6;font-style:italic;text-align:center}
   .ins-line{padding:3px 0;font-size:13px}
   .ins-line strong{color:var(--navy)}
@@ -254,8 +263,9 @@
 
     <div class="card">
       <h3>Statut <span class="en">/ Status</span></h3>
-      <p class="empty-hint">Ajoutez une case et renseignez-la à chaque fois que la procédure suit son cours.<br>
-        <i>Add an entry and fill it in each time the procedure moves forward.</i></p>
+      <p class="empty-hint">Ajoutez une case et renseignez-la à chaque fois que la procédure suit son cours.
+        Les étapes sont répertoriées par ordre chronologique dans le document afin de montrer l'évolution du dossier.<br>
+        <i>Add an entry and fill it in each time the procedure moves forward. Steps are listed chronologically in the document to show the file's progress.</i></p>
       <div id="list-status"></div>
       <button type="button" class="add-btn" data-add="status">＋ Ajouter une case / Add an entry</button>
     </div>
@@ -277,16 +287,18 @@
 
     <div class="card">
       <h3>Transmission à la Banque <span class="en">/ Transmission to the Bank</span></h3>
-      <p class="empty-hint">À remplir à chaque fois que la procédure suit son cours ou lorsque nous avons une information bancaire à transmettre.<br>
-        <i>Fill in each time the procedure moves forward or when we have banking information to send.</i></p>
+      <p class="empty-hint">À remplir à chaque fois que la procédure suit son cours ou lorsque nous avons une information bancaire à transmettre.
+        Les informations sont répertoriées historiquement, par ordre chronologique.<br>
+        <i>Fill in each time the procedure moves forward or when we have banking information to send. Entries are kept as a chronological history.</i></p>
       <div id="list-bank"></div>
       <button type="button" class="add-btn" data-add="bank">＋ Ajouter une case / Add an entry</button>
     </div>
 
     <div class="card">
       <h3>Statut de la Transaction <span class="en">/ Transaction Status</span></h3>
-      <p class="empty-hint">À remplir à chaque fois que la procédure suit son cours ou lorsque nous avons une information bancaire à transmettre.<br>
-        <i>Fill in each time the procedure moves forward or when we have banking information to send.</i></p>
+      <p class="empty-hint">À remplir à chaque fois que la procédure suit son cours ou lorsque nous avons une information bancaire à transmettre.
+        Les statuts sont répertoriés historiquement, par ordre chronologique.<br>
+        <i>Fill in each time the procedure moves forward or when we have banking information to send. Statuses are kept as a chronological history.</i></p>
       <div id="list-trans"></div>
       <button type="button" class="add-btn" data-add="trans">＋ Ajouter une case / Add an entry</button>
     </div>
@@ -364,6 +376,18 @@ function setPath(obj, path, val){
 }
 function deep(o){ return JSON.parse(JSON.stringify(o)); }
 
+/* Tri chronologique (plus ancien → plus récent) ; entrées sans date en dernier.
+   Chronological sort (oldest → newest); undated entries last. */
+function sortChrono(arr){
+  return arr.slice().sort(function(a,b){
+    var da=a.date||'', db=b.date||'';
+    if(da===db) return 0;
+    if(!da) return 1;
+    if(!db) return -1;
+    return da<db ? -1 : 1;
+  });
+}
+
 /* ---------- Sections dynamiques / Dynamic sections ---------- */
 var DYN = {
   status:{ arrKey:'status',
@@ -378,7 +402,9 @@ var DYN = {
 };
 
 function renderRows(key){
-  var cfg = DYN[key], arr = state[cfg.arrKey];
+  var cfg = DYN[key];
+  state[cfg.arrKey] = sortChrono(state[cfg.arrKey]||[]);
+  var arr = state[cfg.arrKey];
   var box = document.getElementById('list-'+key);
   box.innerHTML = '';
   if(!arr.length){
@@ -415,27 +441,43 @@ function infoRow(fr,en,val){
   return '<tr><td class="lbl">'+esc(fr)+' <span class="en">/ '+esc(en)+'</span></td>'+
          '<td>'+(val? val : emptyCell())+'</td></tr>';
 }
+function hasContent(key){
+  var cfg = DYN[key];
+  return (state[cfg.arrKey]||[]).some(function(e){
+    return cfg.fields.some(function(f){ return String(e[f[0]]||'').trim()!==''; });
+  });
+}
 function dynRows(key){
   var cfg = DYN[key];
-  var arr = (state[cfg.arrKey]||[]).filter(function(e){
+  var arr = sortChrono(state[cfg.arrKey]||[]).filter(function(e){
     return cfg.fields.some(function(f){ return String(e[f[0]]||'').trim()!==''; });
   });
   if(!arr.length){
-    return '<tr class="none-row"><td colspan="3">Néant pour le moment / None at this time</td></tr>';
+    return '<tr class="none-row"><td colspan="4">Néant pour le moment / None at this time</td></tr>';
   }
-  return arr.map(function(e){
-    return '<tr><td>'+ (esc(fmtDate(e.date))||'—') +'</td>'+
+  return arr.map(function(e, i){
+    var isLast = (i===arr.length-1 && arr.length>1);
+    return '<tr'+(isLast?' class="latest-row"':'')+'>'+
+           '<td class="num"><span class="step'+(isLast?' latest':'')+'">'+(i+1)+'</span></td>'+
+           '<td>'+ (esc(fmtDate(e.date))||'—') +'</td>'+
            '<td>'+ (esc(e[cfg.fields[1][0]])||'—') +'</td>'+
            '<td>'+ (esc(e[cfg.fields[2][0]])||'—') +'</td></tr>';
   }).join('');
 }
 function dynTable(key){
   var cols = DYN[key].cols;
-  return '<table class="dyn"><thead><tr>'+
-    '<th style="width:17%">'+esc(cols[0])+'</th>'+
-    '<th style="width:29%">'+esc(cols[1])+'</th>'+
-    '<th style="width:54%">'+esc(cols[2])+'</th>'+
+  var w = key==='bank' ? ['7%','16%','26%','51%'] : ['7%','17%','28%','48%'];
+  var t = '<table class="dyn"><thead><tr>'+
+    '<th style="width:'+w[0]+'">N°</th>'+
+    '<th style="width:'+w[1]+'">'+esc(cols[0])+'</th>'+
+    '<th style="width:'+w[2]+'">'+esc(cols[1])+'</th>'+
+    '<th style="width:'+w[3]+'">'+esc(cols[2])+'</th>'+
     '</tr></thead><tbody>'+dynRows(key)+'</tbody></table>';
+  if(hasContent(key)){
+    t += '<div class="hist-note">Historique chronologique du dossier — la dernière ligne correspond à l&#39;étape la plus récente. '+
+         '/ Chronological history of the file — the last row is the most recent step.</div>';
+  }
+  return t;
 }
 
 function docHTML(){
@@ -492,7 +534,7 @@ function docHTML(){
     '</table></div>'+
   '</div>'+
 
-  '<div class="sec"><div class="sec-title">Statut / Status</div>'+
+  '<div class="sec"><div class="sec-title"><span>Statut / Status</span><span class="sec-note">Historique chronologique / Chronological history</span></div>'+
     '<div class="sec-body">'+dynTable('status')+'</div>'+
   '</div>'+
 
@@ -504,11 +546,11 @@ function docHTML(){
     '</div>'+
   '</div>'+
 
-  '<div class="sec"><div class="sec-title">Transmission à la Banque / Transmission to the Bank</div>'+
+  '<div class="sec"><div class="sec-title"><span>Transmission à la Banque / Transmission to the Bank</span><span class="sec-note">Historique chronologique / Chronological history</span></div>'+
     '<div class="sec-body">'+dynTable('bank')+'</div>'+
   '</div>'+
 
-  '<div class="sec"><div class="sec-title">Statut de la Transaction / Transaction Status</div>'+
+  '<div class="sec"><div class="sec-title"><span>Statut de la Transaction / Transaction Status</span><span class="sec-note">Historique chronologique / Chronological history</span></div>'+
     '<div class="sec-body">'+dynTable('trans')+'</div>'+
   '</div>'+
 

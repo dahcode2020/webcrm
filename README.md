@@ -24,10 +24,10 @@ programme financier**, avec **rendu bilingue Français / Anglais** et **export P
 | Document | Titre, référence, date — *Title, reference, date* |
 | Profil du Bénéficiaire | **Ajout de photo** (locale), nom et prénoms, adresse — *Beneficiary profile, photo upload* |
 | Informations du Dossier | Nom, adresse, **montant sollicité**, **mensualité**, devise — *File information* |
-| Statut | Cases dynamiques à ajouter **à chaque fois que la procédure suit son cours** — *Status* |
+| Statut | **Historique chronologique numéroté** — ajoutez une case **à chaque fois que la procédure suit son cours** ; les étapes sont reclassées automatiquement par date (de la plus ancienne à la plus récente), la dernière en date est surlignée — *Status: numbered chronological history, latest step highlighted* |
 | Forfait Assurance | Montant (par défaut **1 115 EUR**) et statut de règlement — *Insurance fee, default "not yet paid"* |
-| Transmission à la Banque | Cases dynamiques (date, banque, information transmise) — *Transmission to the bank* |
-| Statut de la Transaction | Cases dynamiques (date, statut, détails) — *Transaction status* |
+| Transmission à la Banque | **Historique chronologique** (N°, date, banque, information transmise) — *Transmission to the bank: chronological history* |
+| Statut de la Transaction | **Historique chronologique** (N°, date, statut, détails) — *Transaction status: chronological history* |
 | Pied de page | Zones de signature entreprise / bénéficiaire — *Signature areas* |
 
 ## 💾 Stockage local / Local storage
