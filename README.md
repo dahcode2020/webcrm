@@ -15,6 +15,10 @@ badges numérotés (dernière étape en doré), **pastilles de statut** (Réglé
 notice **⚠ URGENT** surlignée en rouge, filigrane « Confidentiel », blocs de signature
 « Fait à … , le … » et pied de page confidentiel.
 
+**Chiffres responsables / Responsible figures :** tous les montants, dates, références et totaux sont composés
+dans une police monospace à chiffres tabulaires et zéro barré/pointé (Consolas, SF Mono, Menlo, DejaVu…) —
+alignement vertical parfait en colonne et aucune confusion possible entre 0/O, 1/7, 3/8.
+
 ## 🚀 Utilisation / Usage
 
 1. Ouvrir `index.html` dans un navigateur (double-clic suffit — Chrome, Edge ou Firefox recommandé).
