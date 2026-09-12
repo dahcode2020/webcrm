@@ -6,49 +6,50 @@
 <title>WebCRM — Fiche de situation bénéficiaire / Beneficiary status sheet</title>
 <style>
   :root{
-    --navy:#16325c; --navy2:#0f2444; --gold:#c9a227;
-    --bg:#eef2f7; --pane:#dfe6ef; --card:#ffffff;
-    --line:#c9d4e4; --line2:#dbe3ee; --txt:#1c2733; --mut:#5b6b7e;
-    --danger:#b3372f;
+    --navy:#0E2A47; --navy2:#0A2036; --gold:#B08C3D; --gold2:#8F7026;
+    --bg:#EEF1F5; --pane:#DDE3EB; --card:#ffffff;
+    --line:#CBD5E1; --line2:#DDE4EC; --txt:#1B2735; --mut:#5D6B7E;
+    --danger:#B3372F; --ok:#1E7D32; --warn:#A05A00;
+    --hairline:#D9E0E8;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--txt);font-size:14px}
 
-  /* ============ TOOLBAR ============ */
+  /* ============ BARRE D'OUTILS ============ */
   .toolbar{
     position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line2);
-    box-shadow:0 2px 10px rgba(15,36,68,.08);padding:8px 14px;
+    box-shadow:0 2px 10px rgba(14,42,71,.08);padding:8px 14px;
     display:flex;align-items:center;gap:12px;flex-wrap:wrap;
   }
   .brand{font-weight:700;color:var(--navy);font-size:16px;white-space:nowrap}
   .brand small{color:var(--mut);font-weight:400;font-size:12px}
   .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-left:auto}
-  .saved-pill{font-size:11px;color:var(--mut);background:#f2f6fb;border:1px solid var(--line2);
+  .saved-pill{font-size:11px;color:var(--mut);background:#F4F7FA;border:1px solid var(--line2);
     border-radius:20px;padding:4px 10px;white-space:nowrap}
   button{
     font-family:inherit;font-size:12.5px;border:1px solid var(--line);background:#fff;color:var(--txt);
     border-radius:8px;padding:7px 12px;cursor:pointer;transition:.15s;
   }
-  button:hover{border-color:var(--navy);background:#f4f7fc}
+  button:hover{border-color:var(--navy);background:#F4F7FA}
   button.primary{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:600}
   button.primary:hover{background:var(--navy2)}
   .view-toggle{display:none;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
   .view-toggle button{border:none;border-radius:0}
   .view-toggle button.active{background:var(--navy);color:#fff}
 
-  /* ============ WORKSPACE ============ */
+  /* ============ PLAN DE TRAVAIL ============ */
   .workspace{display:flex;height:calc(100vh - 57px)}
   .form-panel{width:440px;min-width:340px;overflow-y:auto;padding:14px;background:var(--bg);border-right:1px solid var(--line2)}
-  .preview-pane{flex:1;overflow:auto;padding:20px;background:var(--pane)}
-  .hint{font-size:11.5px;color:#4c5a6d;background:#fdf6e3;border:1px solid #eadfae;border-radius:8px;
-    padding:8px 12px;margin:0 auto 14px;max-width:794px;line-height:1.45}
+  .preview-pane{flex:1;overflow:auto;padding:22px;background:var(--pane)}
+  .hint{font-size:11.5px;color:#4C5A6D;background:#FDF6E3;border:1px solid #EADFAE;border-radius:8px;
+    padding:8px 12px;margin:0 auto 16px;max-width:794px;line-height:1.45}
 
-  /* ============ FORM ============ */
+  /* ============ FORMULAIRE ============ */
   .card{background:var(--card);border:1px solid var(--line2);border-radius:10px;padding:12px 14px;margin-bottom:14px;
-    box-shadow:0 1px 4px rgba(15,36,68,.05)}
+    box-shadow:0 1px 4px rgba(14,42,71,.05)}
   .card>h3{margin:0 0 10px;font-size:13px;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;
-    border-bottom:2px solid var(--navy);padding-bottom:6px}
+    border-bottom:2px solid var(--gold);padding-bottom:6px}
   .card>h3 .en{font-weight:400;text-transform:none;letter-spacing:0;color:var(--mut)}
   .fld{display:block;margin-bottom:9px}
   .fld .lab{display:block;font-size:11.5px;font-weight:600;margin-bottom:3px;color:var(--navy)}
@@ -56,96 +57,168 @@
   .fld input[type=text],.fld input[type=email],.fld input[type=date],.fld input[type=number],
   .fld select,.fld textarea{
     width:100%;font-family:inherit;font-size:13px;padding:7px 9px;border:1px solid var(--line);
-    border-radius:7px;background:#fbfcfe;color:var(--txt);
+    border-radius:7px;background:#FBFCFE;color:var(--txt);
   }
   .fld textarea{resize:vertical}
-  .fld input:focus,.fld select:focus,.fld textarea:focus{outline:2px solid #9db8dd;border-color:var(--navy)}
+  .fld input:focus,.fld select:focus,.fld textarea:focus{outline:2px solid #9DB8DD;border-color:var(--navy)}
   .row2{display:flex;gap:8px}
   .row2 .fld{flex:1}
-  .add-btn{width:100%;margin-top:4px;border-style:dashed;color:var(--navy);font-weight:600;background:#f4f8fd}
+  .add-btn{width:100%;margin-top:4px;border-style:dashed;color:var(--navy);font-weight:600;background:#F4F8FD}
   .empty-hint{font-size:11.5px;color:var(--mut);margin:4px 0;line-height:1.5}
-  .entry{border:1px solid var(--line2);border-radius:8px;padding:9px 10px;margin-bottom:9px;background:#fbfcfe}
+  .entry{border:1px solid var(--line2);border-radius:8px;padding:9px 10px;margin-bottom:9px;background:#FBFCFE}
   .entry-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
   .entry-num{font-size:11px;font-weight:700;color:#fff;background:var(--navy);border-radius:20px;padding:2px 9px}
   .btn-del{border:none;color:var(--danger);background:none;font-size:14px;padding:2px 6px}
-  .btn-del:hover{background:#fdecea}
+  .btn-del:hover{background:#FBEFEE}
   .photo-row{display:flex;gap:10px;align-items:center;margin-bottom:8px}
   .thumb{width:54px;height:54px;border:1px dashed var(--line);border-radius:8px;object-fit:cover;
-    background:#f2f6fb center/24px no-repeat;display:none}
+    background:#F4F7FA center/24px no-repeat;display:none}
   .thumb.has-img{display:block;border-style:solid}
   .link-btn{border:none;background:none;color:var(--navy);text-decoration:underline;padding:2px 4px;font-size:12px}
   .file-item{display:flex;align-items:center;gap:8px;border:1px solid var(--line2);border-radius:8px;
-    padding:7px 10px;margin-bottom:7px;background:#fbfcfe;font-size:12.5px}
+    padding:7px 10px;margin-bottom:7px;background:#FBFCFE;font-size:12.5px}
   .file-item .fi-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .file-item .fi-date{color:var(--mut);font-size:11px}
   .file-item button{padding:4px 9px;font-size:11.5px}
 
-  /* ============ DOCUMENT (aperçu + impression) ============ */
+  /* ════════════════════════════════════════════════════════════════
+     DOCUMENT — style « fiche de Cabinet / banque »
+     ════════════════════════════════════════════════════════════════ */
   .doc{
-    width:210mm;max-width:100%;margin:0 auto;background:#fff;color:#1c2733;
-    box-shadow:0 6px 28px rgba(15,36,68,.22);padding:12mm;border-radius:2px;
+    position:relative;
+    width:210mm;max-width:100%;margin:0 auto;background:#fff;color:#1B2735;
+    box-shadow:0 8px 34px rgba(10,32,54,.28);padding:13mm 13mm 11mm;border-radius:2px;
     -webkit-print-color-adjust:exact;print-color-adjust:exact;
-    font-size:12.5px;line-height:1.45;
+    font-size:11.5px;line-height:1.5;
   }
-  .doc .en{opacity:.78;font-weight:400}
-  .doc .empty{color:#9aa7b6;font-style:italic}
-  .doc-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;
-    border-bottom:3px solid var(--navy);padding-bottom:10px;margin-bottom:12px}
-  .doc-co{display:flex;gap:10px;align-items:flex-start}
-  .doc-logo{max-height:64px;max-width:110px;object-fit:contain}
-  .doc-logo-ph{width:64px;height:64px;border:1.5px dashed var(--line);border-radius:6px;display:flex;
-    align-items:center;justify-content:center;font-size:10px;color:#9aa7b6;letter-spacing:1px}
-  .doc-co-name{font-size:17px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.3px}
-  .doc-co-line{font-size:11.5px;color:#3d4c5e}
-  .doc-titlebox{text-align:right;max-width:46%}
-  .doc-title{font-size:15px;font-weight:800;color:var(--navy);text-transform:uppercase;line-height:1.3}
-  .doc-meta{font-size:11px;color:var(--mut);margin-top:4px}
-  .sec{border:1px solid var(--line);border-radius:6px;margin-bottom:10px;overflow:hidden;break-inside:avoid}
-  .sec-title{background:var(--navy);color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.6px;
-    padding:6px 10px;text-transform:uppercase}
-  .sec-body{padding:10px}
-  .profile{display:flex;gap:14px}
-  .photo{width:100px;height:120px;object-fit:cover;border:1px solid var(--line);border-radius:4px;background:#f2f6fb}
-  .photo-ph{width:100px;height:120px;border:1.5px dashed var(--line);border-radius:4px;display:flex;
-    align-items:center;justify-content:center;color:#9aa7b6;font-size:10px;letter-spacing:1px;background:#f8fafc}
-  .p-name{font-size:15px;font-weight:700;color:var(--navy)}
-  .p-addr{font-size:12px;color:#3d4c5e;margin-top:2px}
-  .p-ref{font-size:11px;color:var(--mut);margin-top:6px}
+  .doc .serif{font-family:Georgia,'Times New Roman',serif}
+  .doc .en{color:#7C8B9D;font-weight:400;font-style:italic}
+  .doc .empty{color:#A6B2C0;font-style:italic}
+
+  /* — filigrane — */
+  .doc-wm{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%) rotate(-26deg);
+    font-family:Georgia,serif;font-size:56px;font-weight:700;letter-spacing:14px;
+    color:rgba(14,42,71,.045);white-space:nowrap;pointer-events:none;user-select:none;z-index:0}
+  .doc>*:not(.doc-wm){position:relative;z-index:1}
+
+  /* — en-tête à papier — */
+  .lh{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+  .lh-left{display:flex;gap:12px;align-items:center}
+  .lh-logo{height:58px;max-width:120px;object-fit:contain}
+  .lh-logo-ph{width:58px;height:58px;border:1px solid var(--hairline);border-radius:4px;display:flex;
+    align-items:center;justify-content:center;font-size:8.5px;color:#A6B2C0;letter-spacing:2px;background:#FBFCFE}
+  .lh-co-name{font-size:18px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;line-height:1.2}
+  .lh-co-sub{font-size:10px;color:var(--mut);margin-top:2px}
+  .lh-right{text-align:right;font-size:10px;color:var(--mut);min-width:150px}
+  .lh-ref{display:inline-block;border:1px solid var(--hairline);border-left:3px solid var(--gold);
+    background:#F8FAFC;color:var(--navy);font-weight:700;font-size:10px;padding:3px 8px;border-radius:3px;letter-spacing:.5px}
+  .lh-date{margin-top:5px}
+  .lh-date b{color:var(--txt)}
+  .lh-rule{margin-top:10px;border-top:2.5px solid var(--navy)}
+  .lh-rule::after{content:'';display:block;border-top:1px solid var(--gold);margin-top:2px}
+
+  /* — bloc titre — */
+  .titleblock{text-align:center;margin:15px 0 13px}
+  .doc-title{font-family:Georgia,'Times New Roman',serif;font-size:16.5px;font-weight:700;letter-spacing:2.6px;
+    text-transform:uppercase;color:var(--navy);line-height:1.35}
+  .doc-subtitle{font-style:italic;color:#7C8B9D;font-size:10.5px;margin-top:3px;letter-spacing:.4px}
+  .titlerule{width:64px;border-top:2px solid var(--gold);margin:9px auto 0}
+
+  /* — chiffres clés — */
+  .kfig{display:flex;border:1px solid var(--hairline);border-radius:3px;margin-bottom:14px;background:#FBFCFE}
+  .kfig-cell{flex:1;padding:9px 10px 10px;text-align:center;border-right:1px solid var(--hairline)}
+  .kfig-cell:last-child{border-right:none}
+  .kfig-lab{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.1px;color:var(--mut)}
+  .kfig-val{font-family:Georgia,'Times New Roman',serif;font-size:16.5px;font-weight:700;color:var(--navy);margin-top:3px}
+  .kfig-sub{font-size:8.5px;color:var(--mut);margin-top:2px;font-style:italic}
+
+  /* — sections numérotées — */
+  .sec{margin-bottom:13px;break-inside:avoid}
+  .sec-head{display:flex;align-items:baseline;gap:8px;border-bottom:1.2px solid var(--navy);
+    padding-bottom:4px;margin-bottom:8px}
+  .sec-num{font-family:Georgia,serif;color:var(--gold);font-size:12.5px;font-weight:700;letter-spacing:1px}
+  .sec-fr{font-size:11px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:var(--navy)}
+  .sec-en{font-size:9.5px;font-style:italic;color:#7C8B9D;margin-left:auto;text-transform:none;letter-spacing:.2px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sec-body{padding:0 1px}
+
+  /* — profil — */
+  .profile{display:flex;gap:16px;align-items:center}
+  .photo-frame{border:1px solid var(--hairline);padding:3px;background:#fff;flex:none}
+  .photo{width:84px;height:102px;object-fit:cover;display:block;border:1px solid var(--gold)}
+  .photo-ph{width:84px;height:102px;border:1px dashed #C4CEDA;display:flex;align-items:center;justify-content:center;
+    color:#A6B2C0;font-size:8.5px;letter-spacing:2px;background:#FBFCFE}
+  .p-field{margin-bottom:6px}
+  .p-flab{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.1px;color:var(--mut)}
+  .p-flab .en{text-transform:none;letter-spacing:.2px;font-style:italic;font-weight:400}
+  .p-name{font-family:Georgia,serif;font-size:16px;font-weight:700;color:#1B2735;line-height:1.25}
+  .p-addr{font-size:11.5px;color:#3D4C5E}
+  .p-refchip{display:inline-block;border:1px solid var(--hairline);border-left:3px solid var(--gold);
+    padding:3px 9px;font-size:9.5px;color:var(--navy);background:#F8FAFC;font-weight:600;letter-spacing:.4px}
+
+  /* — tableaux historiques — */
+  table.h{width:100%;border-collapse:collapse}
+  table.h th{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--mut);
+    text-align:left;padding:3px 8px 5px;border-bottom:1.4px solid var(--navy)}
+  table.h td{padding:6px 8px;font-size:10.8px;border-bottom:1px solid var(--hairline);vertical-align:top;color:#2A3949}
+  table.h tbody tr:last-child td{border-bottom:none}
+  table.h tr{break-inside:avoid}
+  td.num{text-align:center;width:7%}
+  .stepbadge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;
+    border-radius:50%;border:1.2px solid var(--navy);color:var(--navy);font-size:9px;font-weight:700;padding:0 3px;background:#fff}
+  .stepbadge.latest{background:var(--gold);border-color:var(--gold);color:#fff}
+  tr.latest-row td{background:#F7F9FC}
+  tr.urgent-row td{background:#FDF3F2}
+  tr.urgent-row td:first-child{box-shadow:inset 3px 0 0 var(--danger)}
+  .uchip{display:inline-block;border:1px solid var(--danger);color:var(--danger);font-size:7.5px;font-weight:800;
+    letter-spacing:.7px;padding:1px 5px;border-radius:2px;margin-left:6px;vertical-align:1px;background:#fff}
+  .pill{display:inline-block;padding:1.5px 9px;border-radius:10px;font-size:9px;font-weight:700;border:1px solid;letter-spacing:.3px}
+  .pill.paid{color:#1E7D32;border-color:#BFE0C5;background:#F0F9F1}
+  .pill.progress{color:#A05A00;border-color:#EAD7B0;background:#FCF6EA}
+  .pill.unpaid{color:#B3372F;border-color:#EFC7C3;background:#FBEFEE}
+  .pay-date{font-size:9.5px;color:var(--mut);margin-left:5px;font-style:italic}
+  .none-row td{color:#A6B2C0;font-style:italic;text-align:center}
+  .hist-note{font-size:8.5px;color:#93A1B1;margin-top:5px;font-style:italic}
+
+  /* — table infos (points de conduite) — */
   table.info{width:100%;border-collapse:collapse}
-  table.info td{border:1px solid var(--line);padding:6px 9px;font-size:12px;vertical-align:top}
-  table.info td.lbl{width:44%;background:#eef3fa;font-weight:600;color:var(--navy)}
-  table.dyn{width:100%;border-collapse:collapse}
-  table.dyn th{background:#eef3fa;color:var(--navy);font-size:10.5px;text-transform:uppercase;
-    letter-spacing:.4px;border:1px solid var(--line);padding:5px 8px;text-align:left}
-  table.dyn td{border:1px solid var(--line);padding:6px 8px;font-size:11.5px;vertical-align:top;break-inside:avoid}
-  table.dyn tr{break-inside:avoid}
-  table.dyn td.num{text-align:center;background:#f8fafd}
-  .step{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;
-    border-radius:50%;background:var(--navy);color:#fff;font-weight:700;font-size:10.5px;padding:0 4px}
-  .step.latest{background:var(--gold)}
-  tr.latest-row td{background:#f2f7ff}
-  tr.latest-row td.num{background:#eaf2fd}
-  tr.urgent-row td{background:#fdf1ef}
-  tr.urgent-row td.num{background:#fae7e3}
-  .pay-paid{color:#1e7d32;font-weight:600}
-  .pay-progress{color:#a05a00;font-weight:600}
-  .pay-unpaid{color:#b3372f;font-weight:600}
-  .urgent-badge{display:inline-block;background:var(--danger);color:#fff;font-size:9px;font-weight:700;
-    letter-spacing:.5px;border-radius:3px;padding:1px 5px;margin-left:5px}
-  .pay-sum{margin-top:7px;font-size:11.5px}
-  .hist-note{font-size:9.5px;color:var(--mut);margin-top:6px;font-style:italic}
-  .sec-title{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-  .sec-note{font-weight:400;font-size:9px;text-transform:none;letter-spacing:.3px;opacity:.85;white-space:nowrap}
-  .none-row td{color:#9aa7b6;font-style:italic;text-align:center}
-  .ins-line{padding:3px 0;font-size:13px}
-  .ins-line strong{color:var(--navy)}
-  .ins-note{font-size:10.5px;color:var(--mut);margin-top:6px;font-style:italic}
-  .doc-sign{display:flex;gap:16px;margin-top:16px;break-inside:avoid}
-  .sig{flex:1;border:1px solid var(--line);border-radius:6px;padding:8px 10px;text-align:center}
-  .sig-role{font-size:10.5px;font-weight:700;color:var(--navy);text-transform:uppercase}
-  .sig-space{height:58px}
-  .sig-note{font-size:10px;color:var(--mut);border-top:1px solid var(--line2);padding-top:4px}
-  .doc-gen{margin-top:12px;text-align:center;font-size:9.5px;color:#8b98a8}
+  table.info td{padding:5.5px 2px;font-size:11px;border-bottom:1px dotted #C9D2DD;vertical-align:top}
+  table.info tr:last-child td{border-bottom:none}
+  td.ilab{width:46%;color:var(--navy);font-weight:600;font-size:10.2px}
+  td.ilab .en{font-weight:400;font-size:9.5px}
+  td.ival{font-size:11.3px;color:#1B2735}
+  td.ival strong{font-family:Georgia,serif;font-size:12.5px;color:var(--navy)}
+
+  /* — assurance — */
+  .ins-line{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    padding:6px 2px;border-bottom:1px dotted #C9D2DD;font-size:10.8px}
+  .ins-line:last-of-type{border-bottom:none}
+  .ins-lang{color:var(--mut);font-weight:600;font-size:9.5px;text-transform:uppercase;letter-spacing:.8px}
+  .ins-val{font-family:Georgia,serif;font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap}
+
+  /* — totaux paiements — */
+  .pay-sum{display:flex;justify-content:space-between;align-items:baseline;padding:5px 2px;font-size:10.5px;
+    border-bottom:1px dotted #C9D2DD}
+  .pay-sum:last-of-type{border-bottom:none}
+  .pay-sum .slab{color:var(--navy);font-weight:700;font-size:9.8px;text-transform:uppercase;letter-spacing:.7px}
+  .pay-sum .slab .en{text-transform:none;letter-spacing:.2px;font-weight:400;font-style:italic;color:#7C8B9D}
+  .pay-sum .sval{font-family:Georgia,serif;font-size:12px;font-weight:700}
+  .sval.neg{color:var(--danger)} .sval.pos{color:var(--ok)}
+  .allpaid{color:var(--ok);font-weight:700;font-size:10.5px;padding:6px 2px}
+
+  /* — signatures — */
+  .signrow{display:flex;gap:20px;margin-top:16px;break-inside:avoid}
+  .sig{flex:1;text-align:center}
+  .sig-role{font-size:8.5px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:1.1px}
+  .sig-place{font-size:9px;color:var(--mut);margin-top:12px}
+  .sig-place .wl{display:inline-block;width:90px;border-bottom:1px dotted #9AA7B6;height:9px}
+  .sig-line{margin:30px auto 0;width:72%;border-top:1px dotted #9AA7B6}
+  .sig-note{font-size:8px;color:#93A1B1;margin-top:4px}
+
+  /* — pied de page — */
+  .doc-foot{margin-top:14px;border-top:1px solid var(--hairline);padding-top:6px;
+    display:flex;justify-content:space-between;gap:10px;font-size:8px;color:#8B98A8}
+  .doc-foot .conf{font-weight:700;letter-spacing:1.2px;color:#A9B4C2;text-transform:uppercase}
 
   /* ============ TOAST ============ */
   #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);opacity:0;
@@ -164,16 +237,16 @@
     .actions{margin-left:0;width:100%;order:3}
   }
 
-  /* ============ PRINT / PDF ============ */
+  /* ============ IMPRESSION / PDF ============ */
   @media print{
-    @page{size:A4;margin:11mm}
+    @page{size:A4;margin:10mm}
     body{background:#fff}
     .toolbar,.form-panel,.hint,#toast{display:none !important}
     .workspace{display:block;height:auto}
     .preview-pane{display:block !important;padding:0;background:#fff;overflow:visible}
     .doc{width:auto;max-width:none;margin:0;padding:0;box-shadow:none;border-radius:0}
-    .sec{break-inside:avoid}
-    table.dyn td,table.dyn tr{break-inside:avoid}
+    .sec,.signrow{break-inside:avoid}
+    table.h td,table.h tr,table.info tr{break-inside:avoid}
     a[href]:after{content:""}
   }
 </style>
@@ -204,7 +277,7 @@
     <div class="card">
       <h3>Raison Sociale de l'Entreprise <span class="en">/ Company Details</span></h3>
       <label class="fld"><span class="lab">Raison Sociale <span class="en">/ Company Name</span></span>
-        <input type="text" data-bind="company.name" placeholder="ex. FINANCE PLUS SARL"></label>
+        <input type="text" data-bind="company.name" placeholder="ex. CABINET FINANCE PLUS"></label>
       <label class="fld"><span class="lab">Adresse <span class="en">/ Address</span></span>
         <input type="text" data-bind="company.address" placeholder="ex. Cocody Riviera 3, Abidjan"></label>
       <label class="fld"><span class="lab">Email</span>
@@ -294,6 +367,16 @@
     </div>
 
     <div class="card">
+      <h3>Statuts Paiements effectués ou en cours <span class="en">/ Payment Statuses — Paid or In Progress</span></h3>
+      <p class="empty-hint">Cette rubrique liste les frais à payer et confirme s'ils ont été payés ou non, de façon chronologique.
+        La notice « Urgente » signale les frais exigeant un traitement immédiat.<br>
+        <i>This section lists the fees to be paid and confirms whether they have been paid or not, in chronological order.
+        The “Urgent” notice flags fees requiring immediate attention.</i></p>
+      <div id="list-pay"></div>
+      <button type="button" class="add-btn" data-add="pay">＋ Ajouter un frais / Add a fee</button>
+    </div>
+
+    <div class="card">
       <h3>Transmission à la Banque <span class="en">/ Transmission to the Bank</span></h3>
       <p class="empty-hint">À remplir à chaque fois que la procédure suit son cours ou lorsque nous avons une information bancaire à transmettre.
         Les informations sont répertoriées historiquement, par ordre chronologique.<br>
@@ -312,16 +395,6 @@
     </div>
 
     <div class="card">
-      <h3>Statuts Paiements effectués ou en cours <span class="en">/ Payment Statuses — Paid or In Progress</span></h3>
-      <p class="empty-hint">Cette rubrique liste les frais à payer et confirme s'ils ont été payés ou non, de façon chronologique.
-        La notice « Urgente » signale les frais exigeant un traitement immédiat.<br>
-        <i>This section lists the fees to be paid and confirms whether they have been paid or not, in chronological order.
-        The “Urgent” notice flags fees requiring immediate attention.</i></p>
-      <div id="list-pay"></div>
-      <button type="button" class="add-btn" data-add="pay">＋ Ajouter un frais / Add a fee</button>
-    </div>
-
-    <div class="card">
       <h3>Archives Locales <span class="en">/ Local Archives</span></h3>
       <p class="empty-hint">Brouillages enregistrés dans ce navigateur — enregistrez le dossier courant pour le retrouver ici. <i>Drafts saved in this browser.</i></p>
       <div id="filesList"></div>
@@ -331,7 +404,8 @@
 
   <!-- ════════════════ APERÇU / DOCUMENT ════════════════ -->
   <section class="preview-pane">
-    <div class="hint no-print">💡 <b>PDF :</b> cliquez sur « Télécharger PDF » puis choisissez « <b>Enregistrer au format PDF</b> » comme destination d'impression. / Click “Download PDF”, then choose “<b>Save as PDF</b>” as the print destination.</div>
+    <div class="hint no-print">💡 <b>PDF :</b> cliquez sur « Télécharger PDF » puis choisissez « <b>Enregistrer au format PDF</b> » comme destination.
+      Cochez « <b>Graphiques d'arrière-plan</b> » pour conserver les teintes. / Click “Download PDF”, then choose “<b>Save as PDF</b>”. Enable “<b>Background graphics</b>” to keep the tints.</div>
     <div id="doc" class="doc"><!-- rendu dynamique --></div>
   </section>
 </main>
@@ -360,9 +434,9 @@ function defaultState(){
     file:{ amount:'', currency:'EUR', monthly:'' },
     status:[],   /* [{date,label,details}] */
     insurance:{ amount:'1115', currency:'EUR', paid:'unpaid', paidDate:'' },
+    payments:[], /* [{date,label,amount,currency,status,paidDate,urgent}] */
     bank:[],     /* [{date,bank,info}] */
-    trans:[],    /* [{date,label,details}] */
-    payments:[]  /* [{date,label,amount,currency,status,paidDate,urgent}] */
+    trans:[]     /* [{date,label,details}] */
   };
 }
 var state = defaultState();
@@ -452,53 +526,7 @@ function renderRows(key){
   });
 }
 
-/* ---------- Rendu du document / Document rendering ---------- */
-function emptyCell(){ return '<span class="empty">—</span>'; }
-
-function infoRow(fr,en,val){
-  return '<tr><td class="lbl">'+esc(fr)+' <span class="en">/ '+esc(en)+'</span></td>'+
-         '<td>'+(val? val : emptyCell())+'</td></tr>';
-}
-function hasContent(key){
-  var cfg = DYN[key];
-  return (state[cfg.arrKey]||[]).some(function(e){
-    return cfg.fields.some(function(f){ return String(e[f[0]]||'').trim()!==''; });
-  });
-}
-function dynRows(key){
-  var cfg = DYN[key];
-  var arr = sortChrono(state[cfg.arrKey]||[]).filter(function(e){
-    return cfg.fields.some(function(f){ return String(e[f[0]]||'').trim()!==''; });
-  });
-  if(!arr.length){
-    return '<tr class="none-row"><td colspan="4">Néant pour le moment / None at this time</td></tr>';
-  }
-  return arr.map(function(e, i){
-    var isLast = (i===arr.length-1 && arr.length>1);
-    return '<tr'+(isLast?' class="latest-row"':'')+'>'+
-           '<td class="num"><span class="step'+(isLast?' latest':'')+'">'+(i+1)+'</span></td>'+
-           '<td>'+ (esc(fmtDate(e.date))||'—') +'</td>'+
-           '<td>'+ (esc(e[cfg.fields[1][0]])||'—') +'</td>'+
-           '<td>'+ (esc(e[cfg.fields[2][0]])||'—') +'</td></tr>';
-  }).join('');
-}
-function dynTable(key){
-  var cols = DYN[key].cols;
-  var w = key==='bank' ? ['7%','16%','26%','51%'] : ['7%','17%','28%','48%'];
-  var t = '<table class="dyn"><thead><tr>'+
-    '<th style="width:'+w[0]+'">N°</th>'+
-    '<th style="width:'+w[1]+'">'+esc(cols[0])+'</th>'+
-    '<th style="width:'+w[2]+'">'+esc(cols[1])+'</th>'+
-    '<th style="width:'+w[3]+'">'+esc(cols[2])+'</th>'+
-    '</tr></thead><tbody>'+dynRows(key)+'</tbody></table>';
-  if(hasContent(key)){
-    t += '<div class="hist-note">Historique chronologique du dossier — la dernière ligne correspond à l&#39;étape la plus récente. '+
-         '/ Chronological history of the file — the last row is the most recent step.</div>';
-  }
-  return t;
-}
-
-/* ---------- Statuts Paiements effectués ou en cours / Payment statuses ---------- */
+/* ══════════ STATUTS PAIEMENTS / PAYMENT STATUSES ══════════ */
 var CURRENCIES = ['EUR','USD','GBP','CHF','CAD','XOF','XAF'];
 var PAY_STATUS = [
   ['unpaid','Pas encore réglé / Not yet paid'],
@@ -506,13 +534,11 @@ var PAY_STATUS = [
   ['paid','Réglé / Paid']
 ];
 function payStatusInfo(s, paidDate){
-  if(s==='paid'){
-    var t = 'Réglé / Paid';
-    if(paidDate) t += ' — '+fmtDate(paidDate);
-    return '<span class="pay-paid">'+esc(t)+'</span>';
-  }
-  if(s==='progress') return '<span class="pay-progress">En cours / In progress</span>';
-  return '<span class="pay-unpaid">Pas encore réglé / Not yet paid</span>';
+  var cls = s==='paid' ? 'paid' : (s==='progress' ? 'progress' : 'unpaid');
+  var txt = s==='paid' ? 'Réglé / Paid' : (s==='progress' ? 'En cours / In progress' : 'Pas encore réglé / Not yet paid');
+  var out = '<span class="pill '+cls+'">'+esc(txt)+'</span>';
+  if(s==='paid' && paidDate) out += '<span class="pay-date">'+esc(fmtDate(paidDate))+'</span>';
+  return out;
 }
 function renderPayments(){
   state.payments = sortChrono(state.payments||[]);
@@ -585,10 +611,10 @@ function paymentsTable(){
   var arr = sortChrono(state.payments||[]).filter(function(p){
     return String(p.label||'').trim()!=='' || String(p.amount||'').trim()!=='' || p.date;
   });
-  var head = '<table class="dyn"><thead><tr>'+
-    '<th style="width:7%">N°</th><th style="width:15%">Date</th>'+
-    '<th style="width:32%">Frais / Fee</th><th style="width:20%">Montant / Amount</th>'+
-    '<th style="width:26%">Statut / Status</th></tr></thead><tbody>';
+  var head = '<table class="h"><thead><tr>'+
+    '<th class="num" style="width:7%">N°</th><th style="width:14%">Date</th>'+
+    '<th style="width:31%">Frais / Fee</th><th style="width:21%">Montant / Amount</th>'+
+    '<th style="width:27%">Statut / Status</th></tr></thead><tbody>';
   if(!arr.length){
     return head+'<tr class="none-row"><td colspan="5">Néant pour le moment / None at this time</td></tr></tbody></table>';
   }
@@ -597,9 +623,9 @@ function paymentsTable(){
     var cls = p.urgent ? ' class="urgent-row"' : (isLast ? ' class="latest-row"' : '');
     var amt = fmtAmount(p.amount, p.currency||'EUR', 'fr') || '—';
     var fee = esc(p.label||'—');
-    if(p.urgent) fee += ' <span class="urgent-badge">⚠ URGENT</span>';
+    if(p.urgent) fee += '<span class="uchip">⚠ URGENT</span>';
     return '<tr'+cls+'>'+
-      '<td class="num"><span class="step'+(isLast?' latest':'')+'">'+(i+1)+'</span></td>'+
+      '<td class="num"><span class="stepbadge'+(isLast?' latest':'')+'">'+(i+1)+'</span></td>'+
       '<td>'+ (esc(fmtDate(p.date))||'—') +'</td>'+
       '<td>'+fee+'</td>'+
       '<td>'+esc(amt)+'</td>'+
@@ -616,19 +642,73 @@ function paymentsTable(){
     tgt[cur] = (tgt[cur]||0)+n;
   });
   function fmtMap(m){
-    return Object.keys(m).map(function(c){ return fmtAmount(String(m[c]), c, 'fr'); }).join(' &nbsp;·&nbsp; ');
+    return Object.keys(m).map(function(c){ return esc(fmtAmount(String(m[c]), c, 'fr')); }).join(' &nbsp;·&nbsp; ');
   }
   if(Object.keys(unpaidByCur).length){
-    t += '<div class="pay-sum"><strong>Total non réglé / Total outstanding :</strong> <span class="pay-unpaid">'+fmtMap(unpaidByCur)+'</span></div>';
+    t += '<div class="pay-sum"><span class="slab">Total non réglé <span class="en">/ Total outstanding</span></span>'+
+         '<span class="sval neg">'+fmtMap(unpaidByCur)+'</span></div>';
   } else {
-    t += '<div class="pay-sum"><strong>Tous les frais sont réglés / All fees are paid.</strong> ✔</div>';
+    t += '<div class="allpaid">✔ Tous les frais sont réglés / All fees are paid.</div>';
   }
   if(Object.keys(paidByCur).length){
-    t += '<div class="pay-sum"><strong>Total réglé / Total paid :</strong> <span class="pay-paid">'+fmtMap(paidByCur)+'</span></div>';
+    t += '<div class="pay-sum"><span class="slab">Total réglé <span class="en">/ Total paid</span></span>'+
+         '<span class="sval pos">'+fmtMap(paidByCur)+'</span></div>';
   }
   t += '<div class="hist-note">Historique chronologique des paiements — la dernière ligne correspond à l&#39;entrée la plus récente. '+
        '/ Chronological payment history — the last row is the most recent entry.</div>';
   return t;
+}
+
+/* ══════════ TABLEAUX HISTORIQUES / HISTORY TABLES ══════════ */
+function hasContent(key){
+  var cfg = DYN[key];
+  return (state[cfg.arrKey]||[]).some(function(e){
+    return cfg.fields.some(function(f){ return String(e[f[0]]||'').trim()!==''; });
+  });
+}
+function dynRows(key){
+  var cfg = DYN[key];
+  var arr = sortChrono(state[cfg.arrKey]||[]).filter(function(e){
+    return cfg.fields.some(function(f){ return String(e[f[0]]||'').trim()!==''; });
+  });
+  if(!arr.length){
+    return '<tr class="none-row"><td colspan="4">Néant pour le moment / None at this time</td></tr>';
+  }
+  return arr.map(function(e, i){
+    var isLast = (i===arr.length-1 && arr.length>1);
+    return '<tr'+(isLast?' class="latest-row"':'')+'>'+
+           '<td class="num"><span class="stepbadge'+(isLast?' latest':'')+'">'+(i+1)+'</span></td>'+
+           '<td>'+ (esc(fmtDate(e.date))||'—') +'</td>'+
+           '<td>'+ (esc(e[cfg.fields[1][0]])||'—') +'</td>'+
+           '<td>'+ (esc(e[cfg.fields[2][0]])||'—') +'</td></tr>';
+  }).join('');
+}
+function dynTable(key){
+  var cols = DYN[key].cols;
+  var w = key==='bank' ? ['7%','15%','26%','52%'] : ['7%','16%','28%','49%'];
+  var t = '<table class="h"><thead><tr>'+
+    '<th class="num" style="width:'+w[0]+'">N°</th>'+
+    '<th style="width:'+w[1]+'">'+esc(cols[0])+'</th>'+
+    '<th style="width:'+w[2]+'">'+esc(cols[1])+'</th>'+
+    '<th style="width:'+w[3]+'">'+esc(cols[2])+'</th>'+
+    '</tr></thead><tbody>'+dynRows(key)+'</tbody></table>';
+  if(hasContent(key)){
+    t += '<div class="hist-note">Historique chronologique du dossier — la dernière ligne correspond à l&#39;étape la plus récente. '+
+         '/ Chronological history of the file — the last row is the most recent step.</div>';
+  }
+  return t;
+}
+
+/* ══════════ RENDU DU DOCUMENT / DOCUMENT RENDERING ══════════ */
+function emptyCell(){ return '<span class="empty">—</span>'; }
+function secHead(num, fr, en){
+  return '<div class="sec-head"><span class="sec-num">'+num+'</span>'+
+         '<span class="sec-fr">'+esc(fr)+'</span>'+
+         '<span class="sec-en">'+esc(en)+'</span></div>';
+}
+function infoRow(fr,en,val){
+  return '<tr><td class="ilab">'+esc(fr)+' <span class="en">/ '+esc(en)+'</span></td>'+
+         '<td class="ival">'+(val? val : emptyCell())+'</td></tr>';
 }
 
 function docHTML(){
@@ -642,82 +722,131 @@ function docHTML(){
   var insEn = fmtAmount(ins.amount, ins.currency, 'en');
   var stFr  = ins.paid==='paid' ? (ins.paidDate? 'réglé le '+fmtDate(ins.paidDate) : 'réglé') : 'pas encore réglé';
   var stEn  = ins.paid==='paid' ? (ins.paidDate? 'paid on '+fmtDate(ins.paidDate) : 'paid') : 'not yet paid';
+  var insPill = ins.paid==='paid' ? '<span class="pill paid">Réglé / Paid</span>' : '<span class="pill unpaid">Pas encore réglé / Not yet paid</span>';
 
   var logoHtml = c.logo
-    ? '<img class="doc-logo" src="'+c.logo+'" alt="logo">'
-    : '<div class="doc-logo-ph">LOGO</div>';
+    ? '<img class="lh-logo" src="'+c.logo+'" alt="logo">'
+    : '<div class="lh-logo-ph">LOGO</div>';
 
   var photoHtml = b.photo
-    ? '<img class="photo" src="'+b.photo+'" alt="photo du bénéficiaire / beneficiary photo">'
-    : '<div class="photo-ph">PHOTO</div>';
+    ? '<div class="photo-frame"><img class="photo" src="'+b.photo+'" alt="photo du bénéficiaire / beneficiary photo"></div>'
+    : '<div class="photo-frame"><div class="photo-ph">PHOTO</div></div>';
+
+  var kfigAmount = amtFr ? esc(amtFr) : '<span class="empty">—</span>';
+  var kfigMonth  = monFr ? esc(monFr) : '<span class="empty">—</span>';
+  var kfigIns    = insFr ? esc(insFr) : '<span class="empty">—</span>';
 
   return ''+
-  '<div class="doc-head">'+
-    '<div class="doc-co">'+logoHtml+
+  /* filigrane / watermark */
+  '<div class="doc-wm">CONFIDENTIEL</div>'+
+
+  /* ——— en-tête à papier / letterhead ——— */
+  '<div class="lh">'+
+    '<div class="lh-left">'+logoHtml+
       '<div>'+
-        '<div class="doc-co-name">'+(esc(c.name)||'<span class="empty">Raison Sociale de l&#39;Entreprise / Company Name</span>')+'</div>'+
-        '<div class="doc-co-line">'+(esc(c.address)||'<span class="empty">Adresse / Address</span>')+'</div>'+
-        '<div class="doc-co-line">'+(c.email? '✉ '+esc(c.email) : '<span class="empty">Email</span>')+'</div>'+
+        '<div class="lh-co-name">'+(esc(c.name)||'<span class="empty">Raison Sociale de l&#39;Entreprise / Company Name</span>')+'</div>'+
+        '<div class="lh-co-sub">'+(esc(c.address)||'<span class="empty">Adresse / Address</span>')+
+          ((c.address&&c.email)?' &nbsp;·&nbsp; ':'')+(c.email? '✉ '+esc(c.email):'')+'</div>'+
       '</div>'+
     '</div>'+
-    '<div class="doc-titlebox">'+
-      '<div class="doc-title">'+(esc(d.title)||'SITUATION DU BÉNÉFICIAIRE / BENEFICIARY STATEMENT')+'</div>'+
-      '<div class="doc-meta">Réf. / Ref. : '+(esc(d.ref)||'—')+(d.date? ' &nbsp;·&nbsp; Date : '+fmtDate(d.date):'')+'</div>'+
+    '<div class="lh-right">'+
+      (d.ref? '<span class="lh-ref">Réf / Ref : '+esc(d.ref)+'</span>' : '')+
+      '<div class="lh-date">Date : <b>'+ (d.date? fmtDate(d.date) : '—') +'</b></div>'+
     '</div>'+
   '</div>'+
+  '<div class="lh-rule"></div>'+
 
-  '<div class="sec"><div class="sec-title">Profil du Bénéficiaire / Beneficiary Profile</div>'+
+  /* ——— bloc titre / title block ——— */
+  '<div class="titleblock">'+
+    '<div class="doc-title">'+(esc(d.title)||'SITUATION DU BÉNÉFICIAIRE / BENEFICIARY STATEMENT')+'</div>'+
+    '<div class="doc-subtitle">Fiche de situation — Beneficiary Status Sheet</div>'+
+    '<div class="titlerule"></div>'+
+  '</div>'+
+
+  /* ——— chiffres clés / key figures ——— */
+  '<div class="kfig">'+
+    '<div class="kfig-cell"><div class="kfig-lab">Montant Sollicité <span class="en">Requested Amount</span></div>'+
+      '<div class="kfig-val">'+kfigAmount+'</div></div>'+
+    '<div class="kfig-cell"><div class="kfig-lab">Mensualité <span class="en">Monthly Payment</span></div>'+
+      '<div class="kfig-val">'+kfigMonth+'</div></div>'+
+    '<div class="kfig-cell"><div class="kfig-lab">Forfait Assurance <span class="en">Insurance Fee</span></div>'+
+      '<div class="kfig-val">'+kfigIns+'</div>'+
+      '<div class="kfig-sub">'+esc(stFr)+' / '+esc(stEn)+'</div></div>'+
+  '</div>'+
+
+  /* ——— 01 profil ——— */
+  '<div class="sec">'+secHead('01','Profil du Bénéficiaire','Beneficiary Profile')+
     '<div class="sec-body profile">'+photoHtml+
-      '<div>'+
-        '<div class="p-name">'+(esc(b.name)||'<span class="empty">Nom et Prénoms / Full Name</span>')+'</div>'+
-        '<div class="p-addr">'+(esc(b.address)||'<span class="empty">Adresse / Address</span>')+'</div>'+
-        (d.ref? '<div class="p-ref">Dossier / File : '+esc(d.ref)+'</div>':'')+
+      '<div style="flex:1">'+
+        '<div class="p-field"><div class="p-flab">Nom et Prénoms <span class="en">/ Full Name</span></div>'+
+          '<div class="p-name">'+(esc(b.name)||'<span class="empty">Nom et Prénoms / Full Name</span>')+'</div></div>'+
+        '<div class="p-field"><div class="p-flab">Adresse <span class="en">/ Address</span></div>'+
+          '<div class="p-addr">'+(esc(b.address)||'<span class="empty">Adresse / Address</span>')+'</div></div>'+
+        (d.ref? '<div class="p-refchip">Dossier / File : '+esc(d.ref)+'</div>':'')+
       '</div>'+
     '</div>'+
   '</div>'+
 
-  '<div class="sec"><div class="sec-title">Informations du Dossier / File Information</div>'+
+  /* ——— 02 informations du dossier ——— */
+  '<div class="sec">'+secHead('02','Informations du Dossier','File Information')+
     '<div class="sec-body"><table class="info">'+
       infoRow('Nom et Prénoms','Full Name', esc(b.name)||'')+
       infoRow('Adresse','Address', esc(b.address)||'')+
       infoRow('Montant Sollicité','Requested Amount', amtFr? '<strong>'+esc(amtFr)+'</strong>':'')+
-      infoRow('Mensualité','Monthly Payment', monFr? esc(monFr):'')+
+      infoRow('Mensualité','Monthly Payment', monFr? '<strong>'+esc(monFr)+'</strong>':'')+
     '</table></div>'+
   '</div>'+
 
-  '<div class="sec"><div class="sec-title"><span>Statut / Status</span><span class="sec-note">Historique chronologique / Chronological history</span></div>'+
+  /* ——— 03 statut ——— */
+  '<div class="sec">'+secHead('03','Statut','Status — Chronological History')+
     '<div class="sec-body">'+dynTable('status')+'</div>'+
   '</div>'+
 
-  '<div class="sec"><div class="sec-title">Forfait Assurance / Insurance Fee</div>'+
+  /* ——— 04 forfait assurance ——— */
+  '<div class="sec">'+secHead('04','Forfait Assurance','Insurance Fee')+
     '<div class="sec-body">'+
-      '<div class="ins-line">'+(insFr? '<strong>'+esc(insFr)+'</strong>' : '<strong>'+esc(ins.amount||'—')+' '+esc(ins.currency)+'</strong>')+' — '+esc(stFr)+'</div>'+
-      '<div class="ins-line">'+(insEn? '<strong>'+esc(insEn)+'</strong>' : '<strong>'+esc(ins.currency)+' '+esc(ins.amount||'—')+'</strong>')+' — '+esc(stEn)+'</div>'+
-      '<div class="ins-note">Forfait assurance du programme financier / Financial program insurance fee</div>'+
+      '<div class="ins-line"><span class="ins-lang">FR — Forfait Assurance</span>'+
+        '<span>'+(insFr? '<span class="ins-val">'+esc(insFr)+'</span>' : '<span class="ins-val">'+esc(ins.amount||'—')+' '+esc(ins.currency)+'</span>')+
+        ' &nbsp;<span class="en" style="font-size:10px">'+esc(stFr)+'</span></span></div>'+
+      '<div class="ins-line"><span class="ins-lang">EN — Insurance Fee</span>'+
+        '<span>'+(insEn? '<span class="ins-val">'+esc(insEn)+'</span>' : '<span class="ins-val">'+esc(ins.currency)+' '+esc(ins.amount||'—')+'</span>')+
+        ' &nbsp;<span class="en" style="font-size:10px">'+esc(stEn)+'</span></span></div>'+
+      '<div style="margin-top:6px">'+insPill+'</div>'+
     '</div>'+
   '</div>'+
 
-  '<div class="sec"><div class="sec-title"><span>Statuts Paiements effectués ou en cours / Payment Statuses — Paid or In Progress</span><span class="sec-note">Historique chronologique / Chronological history</span></div>'+
+  /* ——— 05 statuts paiements ——— */
+  '<div class="sec">'+secHead('05','Statuts Paiements effectués ou en cours','Payment Statuses — Paid or In Progress')+
     '<div class="sec-body">'+paymentsTable()+'</div>'+
   '</div>'+
 
-  '<div class="sec"><div class="sec-title"><span>Transmission à la Banque / Transmission to the Bank</span><span class="sec-note">Historique chronologique / Chronological history</span></div>'+
+  /* ——— 06 transmission à la banque ——— */
+  '<div class="sec">'+secHead('06','Transmission à la Banque','Transmission to the Bank')+
     '<div class="sec-body">'+dynTable('bank')+'</div>'+
   '</div>'+
 
-  '<div class="sec"><div class="sec-title"><span>Statut de la Transaction / Transaction Status</span><span class="sec-note">Historique chronologique / Chronological history</span></div>'+
+  /* ——— 07 statut de la transaction ——— */
+  '<div class="sec">'+secHead('07','Statut de la Transaction','Transaction Status')+
     '<div class="sec-body">'+dynTable('trans')+'</div>'+
   '</div>'+
 
-  '<div class="doc-sign">'+
+  /* ——— signatures ——— */
+  '<div class="signrow">'+
     '<div class="sig"><div class="sig-role">Pour l&#39;Entreprise / For the Company</div>'+
-      '<div class="sig-space"></div><div class="sig-note">Cachet et signature / Stamp &amp; signature</div></div>'+
+      '<div class="sig-place">Fait à <span class="wl"></span>, le <span class="wl" style="width:56px"></span></div>'+
+      '<div class="sig-line"></div>'+
+      '<div class="sig-note">Cachet et signature / Stamp &amp; signature</div></div>'+
     '<div class="sig"><div class="sig-role">Le Bénéficiaire / The Beneficiary</div>'+
-      '<div class="sig-space"></div><div class="sig-note">'+(esc(b.name)||'&nbsp;')+'</div></div>'+
+      '<div class="sig-place">Fait à <span class="wl"></span>, le <span class="wl" style="width:56px"></span></div>'+
+      '<div class="sig-line"></div>'+
+      '<div class="sig-note">'+(esc(b.name)||'&nbsp;')+'</div></div>'+
   '</div>'+
 
-  '<div class="doc-gen">Document généré localement le '+esc(gen)+' — '+esc(c.name||'WebCRM')+
-    ' · Generated locally on '+esc(gen)+'</div>';
+  /* ——— pied de page / footer ——— */
+  '<div class="doc-foot">'+
+    '<span>Document généré localement le '+esc(gen)+' — '+esc(c.name||'WebCRM')+' · Generated locally</span>'+
+    '<span class="conf">Confidentiel / Confidential</span>'+
+  '</div>';
 }
 
 function renderDoc(){
@@ -747,7 +876,7 @@ function loadDraft(){
   }catch(e){ return null; }
 }
 
-/* ---------- Dossiers enregistrés / Saved files ---------- */
+/* ---------- Archives locales / Local archives ---------- */
 function loadFiles(){ try{ return JSON.parse(localStorage.getItem(LS_FILES))||[]; }catch(e){ return []; } }
 function persistFiles(f){ try{ localStorage.setItem(LS_FILES, JSON.stringify(f)); }catch(e){} }
 
@@ -852,7 +981,7 @@ function toast(msg){
 function isoAgo(days){ var d=new Date(); d.setDate(d.getDate()-days); return d.toISOString().slice(0,10); }
 function sampleState(){
   var s = defaultState();
-  s.company = { name:'FINANCE PLUS SARL', address:'Cocody Riviera 3, Abidjan, Côte d\'Ivoire',
+  s.company = { name:'CABINET FINANCE PLUS SARL', address:'Cocody Riviera 3, Abidjan, Côte d\'Ivoire',
                 email:'contact@financeplus.ci', logo:'' };
   s.doc = { title:'SITUATION DU BÉNÉFICIAIRE / BENEFICIARY STATEMENT', ref:'DOS-2026-0142', date: todayISO() };
   s.beneficiary = { name:'KONE Aboubacar', address:'Rue des Jardins, Yopougon, Abidjan', photo:'' };
@@ -863,14 +992,6 @@ function sampleState(){
     { date: isoAgo(40), label:'Validé / Approved', details:'Avis favorable du comité de crédit. Montant accordé : 25 000 EUR.' }
   ];
   s.insurance = { amount:'1115', currency:'EUR', paid:'unpaid', paidDate:'' };
-  s.bank = [
-    { date: isoAgo(30), bank:'ECOBANK CI', info:'Transmission du dossier de financement à la banque partenaire.' },
-    { date: isoAgo(12), bank:'ECOBANK CI', info:'Réception de l\'accusé de réception bancaire.' }
-  ];
-  s.trans = [
-    { date: isoAgo(12), label:'En attente de décaissement / Pending disbursement',
-      details:'La banque a confirmé la mise à disposition des fonds sous 15 jours ouvrés.' }
-  ];
   s.payments = [
     { date: isoAgo(75), label:'Frais de dossier / Application fee', amount:'100', currency:'EUR',
       status:'paid', paidDate: isoAgo(70), urgent:false },
@@ -878,6 +999,14 @@ function sampleState(){
       status:'progress', paidDate:'', urgent:false },
     { date: isoAgo(5), label:'Forfait assurance / Insurance fee', amount:'1115', currency:'EUR',
       status:'unpaid', paidDate:'', urgent:true }
+  ];
+  s.bank = [
+    { date: isoAgo(30), bank:'ECOBANK CI', info:'Transmission du dossier de financement à la banque partenaire.' },
+    { date: isoAgo(12), bank:'ECOBANK CI', info:'Réception de l\'accusé de réception bancaire.' }
+  ];
+  s.trans = [
+    { date: isoAgo(12), label:'En attente de décaissement / Pending disbursement',
+      details:'La banque a confirmé la mise à disposition des fonds sous 15 jours ouvrés.' }
   ];
   return s;
 }

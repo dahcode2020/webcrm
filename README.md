@@ -6,6 +6,15 @@ programme financier**, avec **rendu bilingue Français / Anglais** et **export P
 
 ---
 
+## 🎨 Design du document / Document design
+
+Rendu type **fiche de Cabinet / banque** : en-tête à papier (logo, filet double marine & or),
+titre serif lettré, **bandeau des chiffres clés** (montant sollicité · mensualité · forfait assurance),
+sections numérotées **01 → 07** avec filets fins, tableaux historiques à lignes hairline avec
+badges numérotés (dernière étape en doré), **pastilles de statut** (Réglé / En cours / Pas encore réglé),
+notice **⚠ URGENT** surlignée en rouge, filigrane « Confidentiel », blocs de signature
+« Fait à … , le … » et pied de page confidentiel.
+
 ## 🚀 Utilisation / Usage
 
 1. Ouvrir `index.html` dans un navigateur (double-clic suffit — Chrome, Edge ou Firefox recommandé).
@@ -42,4 +51,4 @@ programme financier**, avec **rendu bilingue Français / Anglais** et **export P
 ## 🖨 Astuce PDF / PDF tip
 
 Dans la boîte d'impression : destination **« Enregistrer au format PDF »**, format **A4**,
-marges par défaut, et cocher **« Graphiques d'arrière-plan »** si les bandeaux bleus n'apparaissent pas.
+marges par défaut, et cocher **« Graphiques d'arrière-plan »** pour conserver les teintes (filets, pastilles, surlignages).
