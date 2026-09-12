@@ -42,7 +42,7 @@ alignement vertical parfait en colonne et aucune confusion possible entre 0/O, 1
 | Statuts Paiements effectués ou en cours | **Historique chronologique des frais à payer** : montant, devise, statut (réglé / en cours / pas encore réglé), **notice Urgente ⚠** et totaux réglé / non réglé — *Payment statuses: chronological fee list, urgent notice, totals* |
 | Transmission à la Banque | **Historique chronologique** (N°, date, banque, information transmise) — *Transmission to the bank: chronological history* |
 | Statut de la Transaction | **Historique chronologique** (N°, date, statut, détails) — *Transaction status: chronological history* |
-| Pied de page | Zones de signature entreprise / bénéficiaire — *Signature areas* |
+| Pied de page | Zone de signature de l'Entreprise uniquement (cachet) — *Company signature area only* |
 
 ## 💾 Stockage local / Local storage
 

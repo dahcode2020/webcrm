@@ -217,6 +217,8 @@
 
   /* — signatures — */
   .signrow{display:flex;gap:20px;margin-top:16px;break-inside:avoid}
+  .signrow.single{justify-content:flex-end}
+  .signrow.single .sig{width:47%;flex:none}
   .sig{flex:1;text-align:center}
   .sig-role{font-size:8.5px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:1.1px}
   .sig-place{font-size:9px;color:var(--mut);margin-top:12px}
@@ -839,16 +841,12 @@ function docHTML(){
     '<div class="sec-body">'+dynTable('trans')+'</div>'+
   '</div>'+
 
-  /* ——— signatures ——— */
-  '<div class="signrow">'+
+  /* ——— signature (entreprise uniquement) ——— */
+  '<div class="signrow single">'+
     '<div class="sig"><div class="sig-role">Pour l&#39;Entreprise / For the Company</div>'+
       '<div class="sig-place">Fait à <span class="wl"></span>, le <span class="wl" style="width:56px"></span></div>'+
       '<div class="sig-line"></div>'+
       '<div class="sig-note">Cachet et signature / Stamp &amp; signature</div></div>'+
-    '<div class="sig"><div class="sig-role">Le Bénéficiaire / The Beneficiary</div>'+
-      '<div class="sig-place">Fait à <span class="wl"></span>, le <span class="wl" style="width:56px"></span></div>'+
-      '<div class="sig-line"></div>'+
-      '<div class="sig-note">'+(esc(b.name)||'&nbsp;')+'</div></div>'+
   '</div>'+
 
   /* ——— pied de page / footer ——— */
